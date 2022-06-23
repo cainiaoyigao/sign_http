@@ -51,11 +51,52 @@ func ZhToUnicode(sText string) string {
 	return textUnquoted
 }
 
-func JsonUnmarshal(data []byte) map[string]interface{}{
+func InterfaceToString(inter interface{}) string {
+	switch value := inter.(type) {
+	case float64:
+		return strconv.FormatFloat(value, 'f', -1, 64)
+	case float32:
+		return strconv.FormatFloat(float64(value), 'f', -1, 64)
+	case int:
+		return strconv.Itoa(value)
+	case uint:
+		return strconv.Itoa(int(value))
+	case int8:
+		return strconv.Itoa(int(value))
+	case uint8:
+		return strconv.Itoa(int(value))
+	case int16:
+		return strconv.Itoa(int(value))
+	case uint16:
+		return strconv.Itoa(int(value))
+	case int32:
+		return strconv.Itoa(int(value))
+	case uint32:
+		return strconv.Itoa(int(value))
+	case int64:
+		return strconv.FormatInt(value, 10)
+	case uint64:
+		return strconv.FormatUint(value, 10)
+	case string:
+		return value
+	case []byte:
+		return string(value)
+	default:
+		newValue, _ := json.Marshal(value)
+		return string(newValue)
+	}
+}
+
+func JsonUnmarshal(data []byte) map[string]interface{} {
 	j2 := make(map[string]interface{})
+	if len(data) == 0 {
+		log.Println("data is null")
+		return j2
+	}
+
 	err := json.Unmarshal(data, &j2)
 	if err != nil {
-		log.Println(err)
+		log.Println("jsonUnmarshal error : ", err.Error())
 	}
 	return j2
 }
