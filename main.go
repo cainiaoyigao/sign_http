@@ -6,24 +6,30 @@ import (
 	"log"
 	"sign_http/logic/cc"
 	"sign_http/logic/kanxue"
+	"sign_http/logic/qile"
 )
 
 var clockInConf = flag.String("clockin", "0 12 * * *", "cron 语法的定时签到")
 
 func main() {
-	cc.CCSign()
-	kanxue.KanXueSign()
+	AccessCollection()
 
 	if *clockInConf != "" {
 
 		scheduler := cron.New()
 		_, err := scheduler.AddFunc(*clockInConf, func() {
-			cc.CCSign()
-			kanxue.KanXueSign()
+			AccessCollection()
+
 		})
 		if err != nil {
 			log.Fatal(err)
 		}
 		scheduler.Run()
 	}
+}
+
+func AccessCollection() {
+	cc.CCSign()
+	kanxue.KanXueSign()
+	qile.QiLeSign()
 }
