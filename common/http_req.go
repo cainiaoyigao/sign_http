@@ -46,3 +46,14 @@ type HttpRepInfo struct {
 	Response *http.Response
 	BodyMap  map[string]interface{}
 }
+
+func (hp *HttpRepInfo) OutputString(name, key, parameter string, entry ...string) {
+	val, boo := hp.BodyMap[key]
+	if boo {
+		str, err := UnicodeToZh(InterfaceToString(val))
+		if err != nil {
+			log.Println(name, "err: ", err)
+		}
+		log.Printf("%v签到: %#v\n", parameter, string(str))
+	}
+}

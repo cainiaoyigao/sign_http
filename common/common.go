@@ -93,7 +93,9 @@ func JsonUnmarshal(data []byte) map[string]interface{} {
 		log.Println("data is null")
 		return j2
 	}
-
+	if !json.Valid(data) {
+		return j2
+	}
 	err := json.Unmarshal(data, &j2)
 	if err != nil {
 		log.Println("jsonUnmarshal error : ", err.Error())

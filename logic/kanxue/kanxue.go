@@ -34,22 +34,11 @@ func kanXueSearch() {
 }
 
 func httpReq(csrf string) {
-	//client := &http.Client{}
-	//
 	postData := url.Values{}
 	postData.Add("csrf_token", csrf)
-
 	httpInfo := common.HttpReqInfo{Method: "POST", Url: "https://bbs.pediy.com/user-signin.htm", Body: strings.NewReader(postData.Encode())}
 	config := common.ConfigInfo{Name: "kanxue_sign", Suffix: "yml"}
-
 	httpRepInfo := common.HttpReq(httpInfo, config)
 
-	val, boo := httpRepInfo.BodyMap["message"]
-	if boo {
-		str, err := common.UnicodeToZh(common.InterfaceToString(val))
-		if err != nil {
-			log.Println(config.Name, "err: ", err)
-		}
-		fmt.Printf("看雪签到: %#v\n", string(str))
-	}
+	httpRepInfo.OutputString(config.Name, "message", "看雪")
 }
